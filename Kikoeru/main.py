@@ -38,6 +38,7 @@ def run(url, path, language: str):
             print("输入语言类型异常，使用settings文件默认配置")
         else:
             settings.LANGUAGE = language.upper()
+
     if "http" not in url:
         url = settings.URL+url
     util.insert_info_start_url(url)

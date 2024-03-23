@@ -47,6 +47,7 @@ ROBOTSTXT_OBEY = False
 #爬虫下载文件的存储路径
 #这行并没有什么软用，删除会导致图片管道无法加载
 IMAGES_STORE="./血压值300"
+
 FILES_STORE="./血压值300"
 
 
