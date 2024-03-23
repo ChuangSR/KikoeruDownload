@@ -100,8 +100,6 @@ class KikoeruSpider(scrapy.Spider):
         file_item = FileItem()
         file_item["file_urls"] = file_urls
         file_item["path"] = path_dict
-        # with open("temp.txt",mode="w",encoding="utf-8") as file:
-        #     file.write(json.dumps(self.cache,ensure_ascii=False))
         yield file_item
     def get_children(self,path,node,children,response):
         if children:

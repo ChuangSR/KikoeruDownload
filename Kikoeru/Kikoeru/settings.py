@@ -17,7 +17,7 @@ WORK_INFO_API = "https://api.asmr-200.com/api/workInfo/"
 #页面数据下载的api接口
 TRACKS_API = "https://api.asmr-200.com/api/tracks/"
 #下载的文件被保存的路径
-SAVE_PATH = "G:/ASMR"
+SAVE_PATH = ""
 #默认下载的语言
 LANGUAGE = "JZ"
 

@@ -15,7 +15,10 @@ def insert_info_start_url(url):
     settings.INFO_START_URLS.append(work_info_api)
 
 def get_RJ(url):
-    return re.match(".*RJ(\d*).*", url.strip()).group(1)
+    groups = re.match(".*RJ(\d*).*", url.strip())
+    if groups is None:
+        return None
+    return groups.group(1)
 def to_hour(duration) -> str:
     duration = int(duration)
     second = duration%60
