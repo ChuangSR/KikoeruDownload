@@ -13,17 +13,15 @@ SPIDER_MODULES = ["Kikoeru.spiders"]
 NEWSPIDER_MODULE = "Kikoeru.spiders"
 
 #页面详细信息的api接口
-WORK_INFO_API = "https://api.asmr-200.com/api/workInfo/"
+WORK_INFO_API = ""
 #页面数据下载的api接口
-TRACKS_API = "https://api.asmr-200.com/api/tracks/"
+TRACKS_API = ""
 #下载的文件被保存的路径
 SAVE_PATH = ""
 #默认下载的语言
-LANGUAGE = "JZ"
+LANGUAGE = ""
 
-PROXYS = [
-    # {"ip_port":"xxx.xxx.xxx:xxx","user":"xxx","password":"xxx"}
-]
+PROXYS = None
 
 """
     此属性对应WORK_INFO_API中的language_editions

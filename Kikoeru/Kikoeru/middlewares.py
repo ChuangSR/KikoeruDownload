@@ -2,7 +2,7 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-from random import random
+import random
 
 from scrapy import signals
 
@@ -75,7 +75,7 @@ class KikoeruDownloaderMiddleware:
     def process_request(self, request, spider):
         proxys = settings.PROXYS
         if proxys is not None and len(proxys) != 0:
-            request.meta['proxy'] = random.choice(proxys)
+            request.meta['proxy'] = random.random.choice(proxys)
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

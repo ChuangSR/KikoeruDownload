@@ -35,14 +35,16 @@ def create_root_path(item):
     save_path = settings.SAVE_PATH
     if save_path[-1] != "/" or save_path[-1] != "\\":
         save_path += "/"
-    char_list = ['*', '|', ':', '?', '/', '<', '>', '"', '\\']
     root_path = f"{dict_item.get('RJ')}{dict_item.get('title')}"
-    for i in char_list:
-        if i in root_path:
-            root_path = root_path.replace(i, "_")
-    root_path = save_path + root_path
+    root_path = save_path + replace(root_path)
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)
 
     settings.IMAGES_STORE = root_path
+def replace(file_name):
+    char_list = ['*', '|', ':', '?', '/', '<', '>', '"', '\\', "："]
+    for i in char_list:
+        if i in file_name:
+            file_name = file_name.replace(i, "_")
+    return file_name

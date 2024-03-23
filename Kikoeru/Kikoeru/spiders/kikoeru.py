@@ -38,6 +38,8 @@ class KikoeruSpider(scrapy.Spider):
             for language_edition in language_editions:
                 if language_edition["label"] == settings.LANGUAGES.get(settings.LANGUAGE):
                     return util.get_RJ(language_edition["workno"])
+                if settings.LANGUAGE not in settings.LANGUAGES.keys():
+                    return None
 
     def after_404(self, response):
         url = response.meta["url"]
@@ -105,14 +107,14 @@ class KikoeruSpider(scrapy.Spider):
         if children:
             for child in children:
                 mediaDownloadUrl = child.get("mediaDownloadUrl",None)
+                title = util.replace(child["title"])
                 if mediaDownloadUrl:
                     temp = path
-                    temp += "/"+child["title"]
+                    temp += "/"+ title
                     temp += "|" + mediaDownloadUrl
                     response.meta.get("cache").append(temp)
                 else:
-                    path += "/"+child["title"]
-                    self.get_children(path,child, child.get("children", None),response)
+                    self.get_children(path + "/"+title,child, child.get("children", None),response)
         else:
             path += "|" + node["mediaDownloadUrl"]
             response.meta.get("cache").append(path)
