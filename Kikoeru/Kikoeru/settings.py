@@ -11,7 +11,7 @@ BOT_NAME = "Kikoeru"
 
 SPIDER_MODULES = ["Kikoeru.spiders"]
 NEWSPIDER_MODULE = "Kikoeru.spiders"
-
+URL=""
 #页面详细信息的api接口
 WORK_INFO_API = ""
 #页面数据下载的api接口
@@ -46,8 +46,8 @@ ROBOTSTXT_OBEY = False
 
 #爬虫下载文件的存储路径
 #这行并没有什么软用，删除会导致图片管道无法加载
-IMAGES_STORE="./血压值100"
-FILES_STORE="./血压值100"
+IMAGES_STORE="./血压值300"
+FILES_STORE="./血压值300"
 
 
 # IMAGES_URLS_FIELD = 'image_urls'

@@ -18,6 +18,8 @@ def init():
     settings.LANGUAGE = conf["language"]["LANGUAGE"]
     settings.SAVE_PATH = conf["path"]["SAVE_PATH"]
     settings.USER_AGENT = conf["user_agent"]["USER_AGENT"]
+    settings.URL = conf["url"]["URL"]
+
     if ip is not None and len(ip) > 0:
         settings.PROXYS = []
         settings.PROXYS.append(ip)
@@ -36,7 +38,8 @@ def run(url, path, language: str):
             print("输入语言类型异常，使用settings文件默认配置")
         else:
             settings.LANGUAGE = language.upper()
-
+    if "http" not in url:
+        url = settings.URL+url
     util.insert_info_start_url(url)
     process = CrawlerProcess(get_project_settings())
     process.crawl("kikoeru")
@@ -44,7 +47,7 @@ def run(url, path, language: str):
 
 def main():
     parser = argparse.ArgumentParser(description="www.asmr.one网站的下载器")
-    parser.add_argument("-u", "--url", required=False ,help="指定下载的url 也可以是一个RJ号")
+    parser.add_argument("-u", "--url",help="指定下载的url 也可以是一个RJ号")
     parser.add_argument("-p", "--path", help="指定下载文件的保存路径 如果没有指定那么使用settings.py文件中配置")
     parser.add_argument("-l", "--language", help="指定下载的语言类型 参数为:JZ简中 FZ繁中 JP日语 EG英语 你可以在settings.py中配置默认偏好"
                                                  "如果未配置，那么根据链接直接下载")
