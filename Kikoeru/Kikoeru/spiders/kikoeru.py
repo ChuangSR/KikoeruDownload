@@ -12,7 +12,10 @@ class KikoeruSpider(scrapy.Spider):
     name = "kikoeru"
     allowed_domains = ["asmr-200.com"]
     start_urls = settings.INFO_START_URLS
-
+    custom_settings = {
+        "IMAGES_STORE":settings.SAVE_PATH,
+        "FILES_STORE":settings.SAVE_PATH
+    }
     def parse(self, response):
         if response.status == 404:
             yield self.after_404(response)
@@ -25,10 +28,12 @@ class KikoeruSpider(scrapy.Spider):
                 work_info = settings.WORK_INFO_API + RJ
                 yield scrapy.Request(url=work_info, callback=self.parse, meta={"url": response.url})
             else:
-                reply = self.parse_info(response)
+                root_dir_name,reply = self.parse_info(response)
                 yield reply["images_item"]
                 yield reply["work_info_item"]
-                yield scrapy.Request(url=reply["tracks_api"], callback=self.parse_track)
+                yield scrapy.Request(url=reply["tracks_api"], callback=self.parse_track,meta={
+                    "root_dir_name":root_dir_name
+                })
 
 
 
@@ -41,6 +46,7 @@ class KikoeruSpider(scrapy.Spider):
                 if settings.LANGUAGE not in settings.LANGUAGES.keys():
                     return None
 
+    #404的处理
     def after_404(self, response):
         url = response.meta["url"]
         if url is not None:
@@ -77,47 +83,39 @@ class KikoeruSpider(scrapy.Spider):
         reply = {}
 
         reply["work_info_item"] = work_info_item
-
         #构造文件路径请求链接
         tracks_api = settings.TRACKS_API + RJ
         reply["tracks_api"] = tracks_api
         reply["images_item"] = images_item
+        root_dir_name = util.replace(f"RJ{RJ}{response_json.get('title')}")
 
-        #构造项目根路径
-        util.create_root_path(work_info_item)
-        return reply
-
+        images_item["root_dir_name"] = root_dir_name
+        return root_dir_name,reply
+    #解析track api接口
     def parse_track(self, response):
         response_jsons = json.loads(response.text)
-        file_urls= []
-        path_dict = {}
-        response.meta["cache"] = []
+        response.meta["cache"] = {}
         for response_json in response_jsons:
             dir_title = response_json["title"]
             self.get_children(dir_title,response_json,response_json.get("children",None),response)
-        for i in response.meta.get("cache"):
-            i = i.split("|")
-            file_urls.append(i[1])
-            path_dict[i[1]] = i[0]
+
         file_item = FileItem()
-        file_item["file_urls"] = file_urls
-        file_item["path"] = path_dict
+        file_item["file_urls"] = list(response.meta["cache"].keys())
+        file_item["path"] = response.meta["cache"]
+        file_item["root_dir_name"] = response.meta["root_dir_name"]
         yield file_item
+    #遍历文件目录
     def get_children(self,path,node,children,response):
         if children:
             for child in children:
                 mediaDownloadUrl = child.get("mediaDownloadUrl",None)
                 title = util.replace(child["title"])
                 if mediaDownloadUrl:
-                    temp = path
-                    temp += "/"+ title
-                    temp += "|" + mediaDownloadUrl
-                    response.meta.get("cache").append(temp)
+                    response.meta.get("cache")[mediaDownloadUrl] = path +"/" + title
                 else:
                     self.get_children(path + "/"+title,child, child.get("children", None),response)
         else:
-            path += "|" + node["mediaDownloadUrl"]
-            response.meta.get("cache").append(path)
+            response.meta.get("cache")[node["mediaDownloadUrl"]] = path
 
 
 

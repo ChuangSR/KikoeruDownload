@@ -25,17 +25,13 @@ class WorkInfoPipeline:
 
 
 class KikoeruImagesPipeline(ImagesPipeline):
-
     def get_images(self, response, request, info, *, item=None):
         return super().get_images(response, request, info, item=item)
-    # #构建文件的路径
+    #构建文件的路径
     def file_path(self, request, response=None, info=None, *, item=None):
-        self.store = self._get_store(settings.IMAGES_STORE)
-        images_path_name:dict = dict(item).get("images_path_name")
-        return images_path_name.get(request.url)
+        return f"{item['root_dir_name']}/{item.get('images_path_name').get(request.url)}"
 
 class SaveFilesPipeline(FilesPipeline):
     def file_path(self, request, response=None, info=None, *, item=None):
-        self.store = self._get_store(settings.IMAGES_STORE)
-        path = item.get("path")
-        return path.get(request.url)
+        print(f"{item['root_dir_name']}/{item.get('path').get(request.url)}")
+        return f"{item['root_dir_name']}/{item.get('path').get(request.url)}"

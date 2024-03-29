@@ -45,6 +45,7 @@ class WorkInfoItem(scrapy.Item):
     language_editions = scrapy.Field()
 
 class ImagesItem(scrapy.Item):
+    root_dir_name = scrapy.Field()
     #图片文件的路径以及名称
     images_path_name = scrapy.Field()
     #图片的url
@@ -52,6 +53,7 @@ class ImagesItem(scrapy.Item):
     images = scrapy.Field()
 
 class FileItem(scrapy.Item):
+    root_dir_name = scrapy.Field()
     file_urls = scrapy.Field()
     files = scrapy.Field()
     path = scrapy.Field()
