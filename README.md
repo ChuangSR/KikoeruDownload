@@ -4,6 +4,8 @@
 
 ​		scrapy的异步协程的下载速度非常快，同时也会对于其网站的下载服务器造成较大压力（本来就是白嫖，就不要给人家搞出问题了，恼）（某次打开UA黑了，恼）
 
+    预计本项目不会有功能上的更新了
+
 ## 使用：
 
 ​		在[Release v1.1 · ChuangSR/KikoeruDownload (github.com)](https://github.com/ChuangSR/KikoeruDownload/releases/tag/v1.1) 中进行下载，本项目已使用pyinstaller打包为exe，无图形界面，仅仅支持命令运行，同时，本项目不支持将kikoeru.exe所在的目录配置到PATH中（本人对于pyinstaller并不熟悉，会出现bug），所有每次运行请在kikoeru.exe所在的位置打开cmd运行
@@ -91,4 +93,4 @@ USER_AGENT=User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.
 
 ## 关于网站拒绝连接：
 
-​		请尝试更换USER_AGENT的值亦或者是你的IP地址（如果你正常使用UA绝对不会黑的，但是由于项目中默认配置的UA已经被人用黑了，所以写上，我本来不想写这一段的，恼）
+​		请尝试更换USER_AGENT的值亦或者是你的IP地址（如果你正常使用UA绝对不会黑的，但是由于项目中默认配置的UA已经被人用黑了，所以写上，肯定有人爬网站的音频拿去炼丹了，我本来不想写这一段的，恼）
