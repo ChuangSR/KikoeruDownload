@@ -26,7 +26,7 @@ kikoeru.exe -u RJXXXXXXX
 
 ### -p参数：
 
-​		指定下载的路径
+​		指定存储的路径
 
 ```
 kikoeru.exe -u https://www.asmr.one/work/RJXXXXXXX -h D://xxx
