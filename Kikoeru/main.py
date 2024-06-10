@@ -59,4 +59,4 @@ def main():
     language = args.language
     run(url, path, language)
 init()
-# main()
+main()
