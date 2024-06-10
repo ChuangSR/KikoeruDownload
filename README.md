@@ -6,7 +6,7 @@
 
 ## 使用：
 
-​		在[Release v1.1 · ChuangSR/KikoeruDownload (github.com)](https://github.com/ChuangSR/KikoeruDownload/releases/tag/v1.1) 中进行下载，本项目已使用pyinstaller打包为exe，无图形界面，仅仅支持命令运行，同时，本项目不支持将kikoeru.exe所在的目录配置到PATH中（本人对于pyinstaller并不熟悉，会出现bug），所有每次运行请在kikoeru.exe所在的位置打开cmd运行
+  本项目已使用pyinstaller打包为exe，无图形界面，仅仅支持命令运行，同时，本项目不支持将kikoeru.exe所在的目录配置到PATH中（本人对于pyinstaller并不熟悉，会出现bug），所有每次运行请在kikoeru.exe所在的位置打开cmd运行
 
 ### -u参数：
 
