@@ -19,7 +19,7 @@ def init():
     settings.SAVE_PATH = conf["path"]["SAVE_PATH"]
     settings.USER_AGENT = conf["user_agent"]["USER_AGENT"]
     settings.URL = conf["url"]["URL"]
-
+    settings.DOMAIN = list(conf["domain"].values())
     if ip is not None and len(ip) > 0:
         settings.PROXYS = []
         settings.PROXYS.append(ip)
@@ -59,10 +59,4 @@ def main():
     language = args.language
     run(url, path, language)
 init()
-main()
-
-
-
-
-
-
+# main()

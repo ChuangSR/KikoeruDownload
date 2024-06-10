@@ -8,14 +8,15 @@ from Kikoeru.util import util
 
 
 class KikoeruSpider(scrapy.Spider):
-    handle_httpstatus_list = [200,404]
+    handle_httpstatus_list = [200, 404]
     name = "kikoeru"
-    allowed_domains = ["asmr-200.com"]
+    allowed_domains = settings.DOMAIN
     start_urls = settings.INFO_START_URLS
     custom_settings = {
-        "IMAGES_STORE":settings.SAVE_PATH,
-        "FILES_STORE":settings.SAVE_PATH
+        "IMAGES_STORE": settings.SAVE_PATH,
+        "FILES_STORE": settings.SAVE_PATH
     }
+
     def parse(self, response):
         if response.status == 404:
             yield self.after_404(response)
@@ -28,17 +29,15 @@ class KikoeruSpider(scrapy.Spider):
                 work_info = settings.WORK_INFO_API + RJ
                 yield scrapy.Request(url=work_info, callback=self.parse, meta={"url": response.url})
             else:
-                root_dir_name,reply = self.parse_info(response)
+                root_dir_name, reply = self.parse_info(response)
                 yield reply["images_item"]
                 yield reply["work_info_item"]
-                yield scrapy.Request(url=reply["tracks_api"], callback=self.parse_track,meta={
-                    "root_dir_name":root_dir_name
+                yield scrapy.Request(url=reply["tracks_api"], callback=self.parse_track, meta={
+                    "root_dir_name": root_dir_name
                 })
 
-
-
-    #获取配置的语言版本
-    def get_language_version(self,language_editions:list):
+    # 获取配置的语言版本
+    def get_language_version(self, language_editions: list):
         if language_editions is not None and len(language_editions) > 0:
             for language_edition in language_editions:
                 if language_edition["label"] == settings.LANGUAGES.get(settings.LANGUAGE):
@@ -46,13 +45,13 @@ class KikoeruSpider(scrapy.Spider):
                 if settings.LANGUAGE not in settings.LANGUAGES.keys():
                     return None
 
-    #404的处理
+    # 404的处理
     def after_404(self, response):
         url = response.meta["url"]
         if url is not None:
             return scrapy.Request(url=url, callback=self.parse, meta={"url": response.url})
 
-    def parse_info(self,response):
+    def parse_info(self, response):
         response_json = json.loads(response.text)
         RJ = response.url.split("/")[-1]
         work_info_item = WorkInfoItem()
@@ -73,7 +72,7 @@ class KikoeruSpider(scrapy.Spider):
         work_info_item["tags"] = response_json["tags"]
         work_info_item["vas"] = response_json["vas"]
 
-        #构造下载封面图片
+        # 构造下载封面图片
         images_item = ImagesItem()
         images_item["image_urls"] = [response_json["mainCoverUrl"]]
         images_path_name = {}
@@ -83,39 +82,38 @@ class KikoeruSpider(scrapy.Spider):
         reply = {}
 
         reply["work_info_item"] = work_info_item
-        #构造文件路径请求链接
+        # 构造文件路径请求链接
         tracks_api = settings.TRACKS_API + RJ
         reply["tracks_api"] = tracks_api
         reply["images_item"] = images_item
         root_dir_name = util.replace(f"RJ{RJ}{response_json.get('title')}")
 
         images_item["root_dir_name"] = root_dir_name
-        return root_dir_name,reply
-    #解析track api接口
+        return root_dir_name, reply
+
+    # 解析track api接口
     def parse_track(self, response):
         response_jsons = json.loads(response.text)
         response.meta["cache"] = {}
         for response_json in response_jsons:
             dir_title = response_json["title"]
-            self.get_children(dir_title,response_json,response_json.get("children",None),response)
+            self.get_children(dir_title, response_json, response_json.get("children", None), response)
 
         file_item = FileItem()
         file_item["file_urls"] = list(response.meta["cache"].keys())
         file_item["path"] = response.meta["cache"]
         file_item["root_dir_name"] = response.meta["root_dir_name"]
         yield file_item
-    #遍历文件目录
-    def get_children(self,path,node,children,response):
+
+    # 遍历文件目录
+    def get_children(self, path, node, children, response):
         if children:
             for child in children:
-                mediaDownloadUrl = child.get("mediaDownloadUrl",None)
+                mediaDownloadUrl = child.get("mediaDownloadUrl", None)
                 title = util.replace(child["title"])
                 if mediaDownloadUrl:
-                    response.meta.get("cache")[mediaDownloadUrl] = path +"/" + title
+                    response.meta.get("cache")[mediaDownloadUrl] = path + "/" + title
                 else:
-                    self.get_children(path + "/"+title,child, child.get("children", None),response)
+                    self.get_children(path + "/" + title, child, child.get("children", None), response)
         else:
             response.meta.get("cache")[node["mediaDownloadUrl"]] = path
-
-
-
